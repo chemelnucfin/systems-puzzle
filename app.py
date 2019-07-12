@@ -13,7 +13,11 @@ app.secret_key = os.environ['APP_SECRET_KEY']
 def add_item():
     form = ItemForm()
     if form.validate_on_submit():
-        item = Items(name=form.name.data, quantity=form.quantity.data, description=form.description.data, date_added=datetime.datetime.now())
+        item = Items(
+            name=form.name.data,
+            quantity=form.quantity.data,
+            description=form.description.data,
+            date_added=datetime.datetime.now())
         db_session.add(item)
         db_session.commit()
         return redirect(url_for('success'))
@@ -22,12 +26,10 @@ def add_item():
 @app.route("/success")
 def success():
     results = []
- 
     qry = db_session.query(Items)
     results = qry.all()
-
-    return str(results)
+    return render_template('items.html',  results=results)
   
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', port=8080)
